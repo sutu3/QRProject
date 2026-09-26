@@ -22,42 +22,22 @@ public enum ErrorCode {
     ROLE_NOT_FOUND(2004, "Không tìm thấy vai trò", HttpStatus.NOT_FOUND),
     ROLE_IS_EXIST(2005, "Vai trò đã tồn tại", HttpStatus.CONFLICT),
 
-    // ===== Document / Folder / Category (3xxx) =====
-    DOCUMENT_NOT_FOUND(3001, "Không tìm thấy tài liệu", HttpStatus.NOT_FOUND),
-    DOCUMENT_IS_EXIST(3002, "Tài liệu đã tồn tại", HttpStatus.CONFLICT),
-    FOLDER_NOT_FOUND(3003, "Không tìm thấy thư mục", HttpStatus.NOT_FOUND),
-    FOLDER_IS_EXIST(3004, "Thư mục đã tồn tại", HttpStatus.CONFLICT),
-    FOLDER_NOT_DELETED(4007, "Thư mục chưa được xóa mềm, không thể xóa cứng", HttpStatus.BAD_REQUEST),
-    FOLDER_ACCESS_DENIED(3006, "Bạn không có quyền truy cập thư mục này", HttpStatus.FORBIDDEN),
-    CATEGORY_NOT_FOUND(3005, "Không tìm thấy Danh mục", HttpStatus.NOT_FOUND),
-    CATEGORY_IS_EXIST(3006, "Danh mục đã tồn tại", HttpStatus.CONFLICT),
+    // ===== Attribute  / Category (3xxx) =====
+    ATTRIBUTE_NOT_FOUND(3001,"Không tìm thấy thuộc tính",HttpStatus.NOT_FOUND),
+    ATTRIBUTE_EXIST(3002,"Thuộc tính đã tồn tại trong thể loại",HttpStatus.CONFLICT),
+    CATEGORY_NOT_FOUND(3003,"Không tìm thấy thể loại",HttpStatus.NOT_FOUND),
+    ITEM_NOT_FOUND(3004, "Không tìm thấy đồ vật", HttpStatus.NOT_FOUND),
+    QR_CODE_NOT_FOUND(3005, "Không tìm thấy mã QR", HttpStatus.NOT_FOUND),
+    ATTRIBUTE_NOT_ALLOWED(3006, "Thuộc tính không thuộc bộ của loại đồ vật này", HttpStatus.BAD_REQUEST),
+    ATTRIBUTE_MISSING_REQUIRED(3007, "Thiếu thuộc tính bắt buộc", HttpStatus.BAD_REQUEST),
+    ATTRIBUTE_INVALID_VALUE(3008, "Giá trị thuộc tính không hợp lệ với kiểu dữ liệu", HttpStatus.BAD_REQUEST),
+    ATTRIBUTE_VALUE_NOT_IN_OPTIONS(3009, "Giá trị không nằm trong danh sách cho phép", HttpStatus.BAD_REQUEST),
+    ATTRIBUTE_NO_OPTIONS(3010, "Thuộc tính kiểu SELECT/MULTI_SELECT chưa cấu hình options", HttpStatus.INTERNAL_SERVER_ERROR),
+    ATTRIBUTE_INVALID_OPTIONS(3011, "Cấu hình options của thuộc tính không hợp lệ", HttpStatus.INTERNAL_SERVER_ERROR),
+    ATTRIBUTE_IS_EXIST(3012, "Mã thuộc tính đã tồn tại", HttpStatus.CONFLICT),
 
-    // ===== File / Collection (4xxx) =====
-    FILE_NOT_FOUND(4001, "Không tìm thấy tập tin", HttpStatus.NOT_FOUND),
-    FILE_IS_EXIST(4002, "Tập tin đã tồn tại", HttpStatus.CONFLICT),
-    FILE_IS_TO_BIG(4003, "Tập tin quá lớn để lưu trữ", HttpStatus.BAD_REQUEST),
-    FILE_NOT_SUPPORTED(4004, "Tập tin không được hỗ trợ", HttpStatus.UNSUPPORTED_MEDIA_TYPE),
-    FILE_INVALID_TYPE(4007,"File upload không phù hợp với bài viết",HttpStatus.UNSUPPORTED_MEDIA_TYPE),
-    COLLECTION_NOT_FOUND(4005, "Không tìm thấy bộ sưu tập", HttpStatus.NOT_FOUND),
-    COLLECTION_IS_EXIST(4006, "Bộ sưu tập đã tồn tại", HttpStatus.CONFLICT),
-    FAVORITE_ALREADY_EXISTS(4101, "Sách đã có trong danh sách yêu thích", HttpStatus.BAD_REQUEST),
-    FAVORITE_NOT_FOUND(4102, "Không tìm thấy sách yêu thích", HttpStatus.NOT_FOUND),
-
-    // ===== Book / Borrow (5xxx) =====
-    BOOK_NOT_FOUND(5001, "Không tìm thấy sách", HttpStatus.NOT_FOUND),
-    BOOK_IS_EXIST(4002, "Sách đã tồn tại", HttpStatus.CONFLICT),
-    BOOK_OUT_OF_STOCK(5003, "Sách đã hết bản để mượn", HttpStatus.CONFLICT),
-    BORROW_NOT_FOUND(5004, "Không tìm thấy phiếu mượn", HttpStatus.NOT_FOUND),
-    BORROW_INVALID_STATUS(5005, "Trạng thái phiếu mượn không hợp lệ cho thao tác này", HttpStatus.BAD_REQUEST),
-
-    // ===== News (6xxx) =====
-    NEWS_NOT_FOUND(6001, "Không tìm thấy bài viết", HttpStatus.NOT_FOUND),
-    NEWS_SLUG_EXISTS(6002, "Đường dẫn bài viết đã tồn tại", HttpStatus.CONFLICT),
-    NEWS_INVALID_STATUS(6003, "Trạng thái bài viết không hợp lệ", HttpStatus.BAD_REQUEST),
-
-    // ===== QR(7xxx) =====
-    SIZE_TEXT_IS_TOO_BIG(7001,"Đoạn văn không được lớn hơn 200 ký tự ",HttpStatus.BAD_REQUEST)
-
+    // ===== QR (4xxx) =====
+    QR_GENERATE_FAILED(4012, "Không thể tạo ảnh mã QR", HttpStatus.INTERNAL_SERVER_ERROR),
 
 
     ;

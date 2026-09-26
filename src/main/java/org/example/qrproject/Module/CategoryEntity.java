@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryEntity {
+public class CategoryEntity extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_category",columnDefinition = "VARCHAR(36) COMMENT 'Id của thể loại'")
@@ -23,8 +23,4 @@ public class CategoryEntity {
 
     @Column(name = "description",columnDefinition = "VARCHAR(255) COMMENT 'mô tả thể loại'", nullable = false)
     String description;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_account")
-    AccountEntity account;
 }
