@@ -5,14 +5,21 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "qr_items")
+@Table(
+        name = "qr_items",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_qr_item_code",
+                        columnNames = "code"
+                )
+        }
+)
 @SuperBuilder
 @Getter
 @Setter
@@ -20,34 +27,39 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class QrItemEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-     Long id;
+    @Column(name = "id_qr_item", columnDefinition = "VARCHAR(36) COMMENT 'Id mã QR'")
+    String id;
 
-    @Column(nullable = false, unique = true)
-     String code = UUID.randomUUID().toString();
+    @Column(name = "code", columnDefinition = "VARCHAR(100) COMMENT 'Mã QR duy nhất'", nullable = false, unique = true)
+    @Builder.Default
+    String code = UUID.randomUUID().toString();
 
-    @Column(nullable = false)
-     String name;
+    @Column(name = "name", columnDefinition = "VARCHAR(255) COMMENT 'Tên đồ vật'", nullable = false)
+    String name;
 
-     String description;
+    @Column(name = "description", columnDefinition = "TEXT COMMENT 'Mô tả đồ vật'")
+    String description;
 
-    @Column(nullable = false)
-     boolean printed = false;
+    @Column(columnDefinition = "BOOL COMMENT 'Đã in mã QR hay chưa'", nullable = false)
+    @Builder.Default
+    boolean printed = false;
 
-    @Column(nullable = false, updatable = false)
-     Instant createdAt = Instant.now();
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP COMMENT 'Thời gian tạo'", nullable = false, updatable = false)
+    @Builder.Default
+    Instant createdAt = Instant.now();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_account")
-     AccountEntity account;
+    @JoinColumn(name = "id_account",nullable = false, foreignKey = @ForeignKey(name = "fk_qr_item_account"))
+    AccountEntity account;
 
-    // đồ vật bắt buộc thuộc một loại để biết bộ thuộc tính
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_category")
-     CategoryEntity category;
+    @JoinColumn(name = "id_category", nullable = false, foreignKey = @ForeignKey(name = "fk_qr_item_category"))
+    CategoryEntity category;
 
     @OneToMany(mappedBy = "qrItem", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-     List<QrAttributeValue> values = new ArrayList<>();
+    List<QrAttributeValue> values = new ArrayList<>();
 }
