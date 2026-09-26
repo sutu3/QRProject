@@ -1,10 +1,13 @@
 package org.example.qrproject.Service.Impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.qrproject.Dtos.Response.Item.ItemStatusHistoryResponse;
+import org.example.qrproject.Enum.ItemStatus;
 import org.example.qrproject.Exception.AppException;
 import org.example.qrproject.Exception.ErrorCode;
 import org.example.qrproject.Helper.QrCodeGenerator;
-import org.example.qrproject.Module.AttributeEntity;
+import org.example.qrproject.Module.*;
+import org.example.qrproject.Repo.ItemStatusHistoryRepo;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +16,6 @@ import org.example.qrproject.Dtos.Request.Item.ItemRequest;
 import org.example.qrproject.Dtos.Response.Item.ItemResponse;
 import org.example.qrproject.Helper.SecurityUtils;
 import org.example.qrproject.Mapper.ItemMapper;
-import org.example.qrproject.Module.AccountEntity;
-import org.example.qrproject.Module.ItemAttributeValueEntity;
-import org.example.qrproject.Module.ItemEntity;
 import org.example.qrproject.Repo.CategoryAttributeRepo;
 import org.example.qrproject.Repo.ItemRepo;
 import org.example.qrproject.Service.AccountService;
@@ -45,6 +45,7 @@ public class ItemServiceImpl implements ItemService {
     ItemMapper itemMapper;
     ObjectMapper objectMapper;
     QrCodeGenerator qrCodeGenerator;
+    ItemStatusHistoryRepo itemStatusHistoryRepo;
 
 
     @Override
@@ -57,7 +58,16 @@ public class ItemServiceImpl implements ItemService {
         item.setCreatedBy(accountEntity);
         item.setCategory(category);
         applyAndValidateValues(item, req.getAttributeValues());
-        return itemMapper.toResponse(itemRepo.save(item));
+        var saved = itemRepo.save(item);
+        itemStatusHistoryRepo.save(ItemStatusHistoryEntity.builder()
+                .item(saved)
+                .newStatus(saved.getStatus())
+                .note("Tạo mới")
+                .changedAt(LocalDateTime.now())
+                .changedBy(accountEntity)
+                .isDeleted(false)
+                .build());
+        return itemMapper.toResponse(saved);
     }
 
     @Override
@@ -127,6 +137,48 @@ public class ItemServiceImpl implements ItemService {
         return itemRepo.findByIdItemAndCreatedBy_IdAccountAndIsDeletedFalse(
                         id, accountEntity.getIdAccount())
                 .orElseThrow(() -> new AppException(ErrorCode.ITEM_NOT_FOUND));
+    }
+
+    @Override
+    @Transactional
+    public ItemResponse changeStatus(String id, ItemStatus newStatus, String note) {
+        var account = SecurityUtils.getClaim("sub");
+        AccountEntity accountEntity = accountService.getAccountById(account);
+
+        var item = getOwned(id);
+        ItemStatus old = item.getStatus();
+
+        if (old == newStatus) {
+            return itemMapper.toResponse(item); // không đổi thì không ghi
+        }
+
+        item.setStatus(newStatus);
+        var saved = itemRepo.save(item);
+
+        itemStatusHistoryRepo.save(ItemStatusHistoryEntity.builder()
+                .item(item)
+                .oldStatus(old)
+                .newStatus(newStatus)
+                .note(note)
+                .changedAt(LocalDateTime.now())
+                .changedBy(accountEntity)
+                .isDeleted(false)
+                .build());
+
+        return itemMapper.toResponse(saved);
+    }
+    @Override
+    @Transactional(readOnly = true)
+    public List<ItemStatusHistoryResponse> getStatusHistory(String id) {
+        getOwned(id); // chặn xem item của người khác
+        return itemStatusHistoryRepo
+                .findByItem_IdItemAndIsDeletedFalseOrderByChangedAtDesc(id)
+                .stream()
+                .map(h -> new ItemStatusHistoryResponse(
+                        h.getOldStatus(), h.getNewStatus(), h.getNote(),
+                        h.getChangedAt(),
+                        h.getChangedBy() != null ? h.getChangedBy().getUserName() : null))
+                .toList();
     }
     // ===== RÀNG BUỘC THUỘC TÍNH =====
     private void applyAndValidateValues(ItemEntity item, Map<String, String> input) {

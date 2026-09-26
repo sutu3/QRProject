@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.example.qrproject.Dtos.ApiResponse;
 import org.example.qrproject.Dtos.Request.Item.ItemRequest;
+import org.example.qrproject.Dtos.Request.Item.ItemStatusChangeRequest;
 import org.example.qrproject.Dtos.Response.Item.ItemResponse;
+import org.example.qrproject.Dtos.Response.Item.ItemStatusHistoryResponse;
 import org.example.qrproject.Service.ItemService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -92,6 +94,24 @@ public class ItemController {
             @PathVariable String code) {
         return ApiResponse.<ItemResponse>builder()
                 .Result(itemService.resolveByCode(code))
+                .success(true)
+                .code(0)
+                .build();
+    }
+    @PatchMapping("/{id}/status")
+    public ApiResponse<ItemResponse> changeStatus(@PathVariable String id,
+                                                  @Valid @RequestBody ItemStatusChangeRequest req) {
+        return ApiResponse.<ItemResponse>builder()
+                .Result(itemService.changeStatus(id, req.getStatus(), req.getNote()))
+                .success(true)
+                .code(0)
+                .build();
+    }
+
+    @GetMapping("/{id}/status-history")
+    public ApiResponse<List<ItemStatusHistoryResponse>> history(@PathVariable String id) {
+        return ApiResponse.<List<ItemStatusHistoryResponse>>builder()
+                .Result(itemService.getStatusHistory(id))
                 .success(true)
                 .code(0)
                 .build();
