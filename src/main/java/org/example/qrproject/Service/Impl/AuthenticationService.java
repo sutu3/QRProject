@@ -81,7 +81,7 @@ public class AuthenticationService {
 
         if (!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
 
-        if (Boolean.TRUE.equals(account.getLock())) {
+        if (Boolean.TRUE.equals(account.getIsLock())) {
             throw new AppException(ErrorCode.ACCOUNT_LOCKED);
         }
 

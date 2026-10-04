@@ -31,7 +31,7 @@ public class AccountEntity extends BaseEntity{
     @JoinColumn(name = "id_role",nullable = false)
     RoleEntity role;
 
-    @Column(columnDefinition = "BOOL COMMENT 'trạng thái khóa tài khoản'", nullable = false)
-    Boolean lock = false;
+    @Column(columnDefinition = "BOOLEAN COMMENT 'trạng thái khóa tài khoản'", nullable = false)
+    Boolean isLock = false;
 
 }

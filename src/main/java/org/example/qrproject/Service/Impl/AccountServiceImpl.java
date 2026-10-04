@@ -67,8 +67,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void lockAccount(String id) {
         AccountEntity account=getAccountById(id);
-        account.setIsDeleted(false);
-        account.setDeletedAt(LocalDateTime.now());
+        account.setIsLock(true);
         accountRepo.save(account);
     }
 }

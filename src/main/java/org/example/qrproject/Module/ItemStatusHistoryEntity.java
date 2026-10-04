@@ -9,7 +9,6 @@ import org.example.qrproject.Enum.ItemStatus;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "item_status_histories")
 @SuperBuilder
 @Getter
 @Setter

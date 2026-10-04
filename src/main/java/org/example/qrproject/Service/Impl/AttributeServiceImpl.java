@@ -28,6 +28,7 @@ public class AttributeServiceImpl implements AttributeService {
     AttributeRepo attributeRepo;
     AccountService accountService;
     AttributeMapper attributeMapper;
+    //get all các thuộc tính
 
     @Override
     public AttributeResponse create(AttributeRequest req) {

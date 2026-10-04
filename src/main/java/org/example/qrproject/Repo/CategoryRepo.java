@@ -9,6 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface CategoryRepo extends JpaRepository<CategoryEntity, String> {
-    List<CategoryEntity> findByAccount_IdAccountAndIsDeletedFalse(String accountId);
-    Optional<CategoryEntity> findByIdCategoryAndAccount_IdAccountAndIsDeletedFalse(String id, String accountId);
+    List<CategoryEntity> findAllByIsDeletedFalse();
+    Optional<CategoryEntity> findByIdCategoryAndIsDeletedFalse(String id);
 }

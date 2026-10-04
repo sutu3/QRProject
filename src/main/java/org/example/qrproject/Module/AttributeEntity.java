@@ -7,8 +7,6 @@ import lombok.experimental.SuperBuilder;
 import org.example.qrproject.Enum.DataType;
 
 @Entity
-@Table(name = "attributes",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"id_account", "code"}))
 @SuperBuilder
 @Getter
 @Setter

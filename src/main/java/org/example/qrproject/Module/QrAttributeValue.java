@@ -3,15 +3,14 @@ package org.example.qrproject.Module;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name = "qr_attribute_values",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"qr_item_id", "attribute_definition_id"}))
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class QrAttributeValue {
     @Id

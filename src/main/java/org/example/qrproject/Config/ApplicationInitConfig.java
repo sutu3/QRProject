@@ -64,6 +64,7 @@ public class ApplicationInitConfig {
                         .createdAt(LocalDateTime.now())
                         .role(vaiTro)
                         .isDeleted(false)
+                        .isLock(false)
                         .build();
 
 

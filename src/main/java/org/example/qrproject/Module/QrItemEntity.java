@@ -11,15 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(
-        name = "qr_items",
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "uk_qr_item_code",
-                        columnNames = "code"
-                )
-        }
-)
+
 @SuperBuilder
 @Getter
 @Setter

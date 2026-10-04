@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface AccountRepo extends JpaRepository<AccountEntity,String>, JpaSpecificationExecutor<AccountEntity> {
     Optional<AccountEntity> findByUserNameIgnoreCaseAndIsDeleted(String tenTaiKhoan, boolean isDeleted);
-    Optional<AccountEntity> findByUserNameAndMatKhau(String UserName,String matKhau);
+    Optional<AccountEntity> findByUserNameAndPassword(String UserName,String matKhau);
 
     List<AccountEntity> findByIsDeletedFalse();
 

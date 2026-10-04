@@ -41,15 +41,16 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponse create(CategoryRequest req) {
 
         CategoryEntity category=categoryMapper.toEntity(req);
+        category.setIsDeleted(false);
+        category.setCreatedAt(LocalDateTime.now());
         categoryRepo.save(category);
         return categoryMapper.toResponse(category);
     }
 
     @Override
     public List<CategoryResponse> list() {
-        var account = SecurityUtils.getClaim("sub");
-        AccountEntity accountEntity=accountService.getAccountById(account);
-        return categoryRepo.findByAccount_IdAccountAndIsDeletedFalse(accountEntity.getIdAccount()).stream()
+
+        return categoryRepo.findAllByIsDeletedFalse().stream()
                 .filter(category -> !category.getIsDeleted())
                 .map(categoryMapper::toResponse).collect(Collectors.toList());
     }
@@ -92,10 +93,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
    public CategoryEntity getOwnedCategory(String id) {
-        var account = SecurityUtils.getClaim("sub");
-        AccountEntity accountEntity=accountService.getAccountById(account);
-        return categoryRepo.findByIdCategoryAndAccount_IdAccountAndIsDeletedFalse(
-                        id, accountEntity.getIdAccount())
+        return categoryRepo.findByIdCategoryAndIsDeletedFalse(
+                        id)
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOT_FOUND));
     }
 
